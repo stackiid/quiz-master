@@ -1,85 +1,200 @@
 # Quiz Master
 
-> A 30-question terminal quiz game with OOP design, student registration, a two-round skip system, and a certificate generator - built in C++ as a Semester 2 project.
+![Language](https://img.shields.io/badge/language-C%2B%2B11-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
----
+Quiz Master is a single-file, console-based quiz application written in C++. It registers a student, runs a fixed 30-question multiple-choice quiz across 7 categories, offers a second round for skipped questions, prints a result sheet with a letter grade, and finishes with a text-based completion certificate.
 
-## 📋 Overview
+The project was built as a Semester 2 assignment to apply object-oriented programming concepts (classes, structs, encapsulation) in a complete interactive program.
 
-This project was built in Semester 2, after being introduced to Object-Oriented Programming. The goal was to apply OOP concepts - classes, objects, encapsulation - to something that felt like a complete application rather than just a textbook exercise.
+## Features
 
-The program walks a student through registration, runs a 30-question quiz across 7 categories, handles skipped questions in a second round, and ends by printing a result sheet and a personalized certificate.
+- Student registration form with 10 prompts, including a level-dependent validation step for School, College, or University
+- 30 hard-coded multiple-choice questions (A to D) across 7 categories
+- Two-round skip system: skip a question with `S` in round 1 and attempt it again in round 2
+- Input validation for quiz answers and for the education level, grade, year, and semester ranges
+- Result sheet listing the category, the user's answer, the correct answer, and a status for every question
+- Score, percentage, and letter grade calculation
+- Completion certificate showing the student's details, score, grade, and a randomly generated `QM-XXXX` code
+- Platform-aware screen clearing and delays for Windows and non-Windows systems
 
----
+## Question Bank
 
-## ✅ Features
+| Category (as shown in the program) | Questions |
+| --- | --- |
+| GK | 5 |
+| AI/ML | 5 |
+| Islam | 5 |
+| Pak Study | 5 |
+| Science | 6 |
+| English | 2 |
+| Math | 2 |
+| **Total** | **30** |
 
-- **Student registration** - collects personal details (name, CNIC, education level) used on the certificate
-- **30 questions across 7 categories** - General Knowledge, AI/ML, Islamic Studies, Pakistan Studies, Science, English, and Mathematics
-- **Two-round skip system** - skip a question in round 1 to attempt it later; skipping again in round 2 marks it as 0
-- **Result sheet** - shows every question, the user's answer, the correct answer, and the status (Correct / Wrong / Skipped)
-- **Grade calculation** - A+ to F based on percentage
-- **Certificate generation** - prints a formatted completion certificate with the student's details and a random verification code
-- **Cross-platform compile** - `#ifdef _WIN32` block keeps it compatible with both Windows and Linux
+Questions are defined directly in `main()` with calls to `QuizEngine::addQuestion()`. The order is fixed and is not shuffled.
 
----
+## Tech Stack
 
-## 🧠 Concepts Demonstrated
+- Language: C++ (C++11 or later, due to features such as `to_string`, range-based `for`, and default member initializers)
+- Standard library headers: `iostream`, `string`, `vector`, `iomanip`, `algorithm`, `ctime`, `cstdlib`
+- Platform headers: `windows.h` on Windows, `unistd.h` on other systems
+- IDE project file: Code::Blocks (GCC compiler, Debug and Release targets)
 
-- **Classes** - `User` class for student data, `QuizEngine` class for quiz logic
-- **Structs** - `Question` struct holding per-question data
-- **Encapsulation** - quiz state (score, question bank) is private inside `QuizEngine`
-- **Vectors** - dynamic question bank and skip-list
-- **STL algorithms** - `transform()` for case-insensitive input
-- **`iomanip`** - formatted output with `setw` and `setprecision`
-- **Conditional compilation** - `#ifdef _WIN32` for platform portability
-- **Input validation loops** - level selection re-prompts on bad input
-- **`srand` / `rand`** - seeded with `time(0)` for the certificate code
+No third-party libraries, databases, or network services are used.
 
----
+## Project Structure
 
-## 📁 Project Structure
+Files tracked in the repository (the `.gitignore` uses an allow-list):
 
+```text
+.
+|-- main.cpp      # All classes, helpers, the question bank, and main()
+|-- README.md
+|-- LICENSE
+`-- .gitignore
 ```
-quiz-master/
-├── main.cpp        ← All classes and logic in a single file
-└── README.md
-```
 
-The `main.cpp` is organized in this order:
+The original project folder also contains local IDE and build artifacts that are intentionally ignored by Git: `Semester-02_Quiz-Master.cbp`, `Semester-02_Quiz-Master.layout`, `main.o`, and `main.exe`.
 
-1. Platform-specific helpers (`clearScreen`, `waitSec`)
-2. `User` class - registration and data storage
-3. `Question` struct - per-question data
-4. `QuizEngine` class - quiz flow, scoring, results, certificate
-5. `main()` - startup, question bank population, quiz execution
+### Code organization in `main.cpp`
 
----
+1. Platform helpers: `waitSec()` and `clearScreen()`, selected with `#ifdef _WIN32`
+2. `User` class: collects and stores registration details
+3. `Question` struct: category, prompt, four options, correct answer, the user's answer, and skip flags
+4. `QuizEngine` class: question storage, quiz flow, scoring, grading, result sheet, and certificate
+5. `main()`: seeds the random generator, shows the welcome screen, registers the student, loads the questions, and runs the quiz
 
-## 🚀 Getting Started
+## Prerequisites
 
-**Requirements:** A C++ compiler with C++11 or later (g++, MinGW, MSVC, or Code::Blocks)
+- A C++ compiler with C++11 support (for example `g++` or MinGW)
+- A terminal
 
-**Compile and run:**
+## Getting Started
+
+From the directory containing `main.cpp`:
 
 ```bash
-g++ main.cpp -o quizmaster
-./quiz-master
+g++ -std=c++11 main.cpp -o quizmaster
 ```
 
-Or open in Code::Blocks and hit Run (the `.cbp` project file is not included - just add `main.cpp` to a new project).
+Run on Linux or macOS:
 
----
+```bash
+./quizmaster
+```
 
-## 📝 Notes
+Run on Windows:
 
-- The question bank is hard-coded in `main()` - 30 questions, 7 categories. Adding new questions only requires one additional `addQuestion()` call.
-- The certificate's verify code uses `rand()` seeded with `time(0)` - it's a visual feature, not actual verification.
-- Semester 2 scope: no file I/O, no database, no persistent scores. Those would be later-semester additions.
-- The `wait(10)` delay from the original was intentional for presentation purposes - reduced to 2 seconds here since it's better for normal usage.
+```bash
+quizmaster.exe
+```
 
----
+### Using Code::Blocks
 
-## 📄 License
+If the local `Semester-02_Quiz-Master.cbp` file is present, open it in Code::Blocks and build and run the Debug or Release target. Both targets use the GCC compiler. Because this file is excluded by `.gitignore`, a fresh clone will not contain it; in that case create a new console project and add `main.cpp`.
 
-MIT - see the [LICENSE](./LICENSE) file in the root of the repository.
+## Usage
+
+1. At the welcome screen, type `yes` (lowercase) to continue. Any other input exits the program.
+2. Complete the registration form:
+
+   | # | Field | Notes |
+   | --- | --- | --- |
+   | 1 | Full Name | Free text |
+   | 2 | Father's Name | Free text |
+   | 3 | Age | Integer |
+   | 4 | Gender (M/F) | Single word, not validated |
+   | 5 | CNIC / Form-B | Single word, no spaces |
+   | 6 | Email Address | Single word, not validated |
+   | 7 | Home Address | Free text |
+   | 8 | Favorite Hobby | Free text |
+   | 9 | Level | `School`, `College`, or `Uni` (case-insensitive) |
+   | 10 | Status | `Undergraduate` or `Graduated` suggested by the prompt, stored as a single word |
+
+   The level determines the follow-up validation:
+
+   | Level | Required input | Accepted range |
+   | --- | --- | --- |
+   | School | Grade | 1 to 10 |
+   | College | Year | 11 or 12 |
+   | Uni | Year and Semester | Year 1 to 4, Semester 1 to 8 |
+
+3. Answer each question with `A`, `B`, `C`, or `D`, or enter `S` to skip it for later. Input is case-insensitive. Invalid input re-displays the question after a short delay.
+4. If any questions were skipped, round 2 presents them again with a warning. Skipping a second time awards no points and the question is shown as `SKIPPED` in the results.
+5. After the quiz, the result sheet is displayed. Press Enter to generate the certificate.
+
+### Grading
+
+The percentage is `score / total questions * 100`. Skipped and wrong answers both count as zero.
+
+| Percentage | Grade |
+| --- | --- |
+| 90 and above | A+ |
+| 80 to below 90 | A |
+| 70 to below 80 | B |
+| 60 to below 70 | C |
+| 50 to below 60 | D (Pass) |
+| Below 50 | F (Fail) |
+
+### Example output
+
+Result sheet (excerpt):
+
+```text
+ ================ RESULT SHEET ================
+ Category    Your Ans Correct  Status
+ -----------------------------------------------
+ GK           B        C        Wrong
+ GK           B        B        Correct
+ ...
+ -----------------------------------------------
+ Score   : 15 / 30
+ Average : 50.0%
+ Grade   : D  (Pass)
+ ===============================================
+```
+
+Certificate:
+
+```text
+ *****************************************************
+           QUIZ COMPLETION CERTIFICATE
+ *****************************************************
+
+   Name      : Ali Khan
+   Father    : Khan Sr
+   Age / Gender : 20 / M
+   CNIC      : 12345-1234567-1
+   Level     : uni  (Year 2, Sem 4)
+   Status    : Graduated
+
+   This confirms the above candidate has completed
+   the 30-Question Knowledge Quiz.
+
+   Score  : 15 / 30   |   Grade : D  (Pass)
+
+   Verify : QM-6376
+
+ *****************************************************
+```
+
+The certificate displays name, father's name, age, gender, CNIC, level, and status. Email address, home address, and hobby are collected during registration but are not printed on the certificate.
+
+## Implementation Notes
+
+- `User` stores the registration data and runs the registration form in `fillDetails()`.
+- `QuizEngine` keeps the question list and score private and exposes `addQuestion()`, `startQuiz()`, and `showResults()`.
+- `startQuiz()` asks every question once, collects the indexes of skipped questions, and re-asks only those in round 2.
+- The verification code on the certificate is `"QM-"` followed by a pseudo-random number from 1000 to 9999 (`rand()` seeded with `time(0)`). It is generated for display only and is not checked or stored anywhere.
+- Screen clearing uses `system("cls")` on Windows and `system("clear")` elsewhere.
+
+## Limitations
+
+- The question bank is hard-coded and cannot be changed without editing and recompiling the source.
+- Results and certificates are printed to the console only. Nothing is saved to disk.
+- Age, grade, year, and semester are read as integers without checking for stream errors, so non-numeric input in those fields is not handled.
+- Gender, CNIC, email, and status are not validated.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
